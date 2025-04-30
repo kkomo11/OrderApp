@@ -1,0 +1,6 @@
+E:\Project_K\개인공부\OrderApp\OrderApp\bin\Debug\OrderApp.exe.config
+E:\Project_K\개인공부\OrderApp\OrderApp\bin\Debug\OrderApp.exe
+E:\Project_K\개인공부\OrderApp\OrderApp\bin\Debug\OrderApp.pdb
+E:\Project_K\개인공부\OrderApp\OrderApp\obj\Debug\OrderApp.csprojResolveAssemblyReference.cache
+E:\Project_K\개인공부\OrderApp\OrderApp\obj\Debug\OrderApp.exe
+E:\Project_K\개인공부\OrderApp\OrderApp\obj\Debug\OrderApp.pdb
