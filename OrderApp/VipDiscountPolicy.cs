@@ -2,10 +2,9 @@
 {
     public class VipDiscountPolicy : IDiscountPolicy
     {
-        public decimal ApplyPrice(decimal TotalPrice)
+        public decimal ApplyDiscount(decimal TotalPrice)
         {
-            decimal CalcPrice = TotalPrice * (decimal) 0.9;
-            return CalcPrice;
+            return TotalPrice * 0.9m;
         }
     }
 }

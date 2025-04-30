@@ -12,10 +12,12 @@ namespace OrderApp.Tests
         [Fact]
         public void PlaceOrder_Should_ReturnCompletedOrder()
         {
+            IDiscountPolicyFactory factory = new DefaultDiscountPolicyFactory();
+
             // Arrange
             var cart = new Cart();
             cart.AddProduct(new Product("Keyboard", 100));
-            var service = new OrderService();
+            var service = new OrderService(factory);
 
             // Act
             var order = service.PlaceOrder(cart);
@@ -28,9 +30,11 @@ namespace OrderApp.Tests
         [Fact]
         public void PlaceOrder_WithEmptyCart_ShouldThrowException()
         {
+            IDiscountPolicyFactory factory = new DefaultDiscountPolicyFactory();
+
             // Arrange
             var emptyCart = new Cart();
-            var service = new OrderService();
+            var service = new OrderService(factory);
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => service.PlaceOrder(emptyCart));
@@ -90,20 +94,26 @@ namespace OrderApp.Tests
         }
 
         [Fact]
-        public void TotalPrice_Calculation()
+        public void CalcPrice_Should_ApplyCorrectDiscount_ForEachPolicy()
         {
-            var service = new OrderService();
+            IDiscountPolicyFactory factory = new DefaultDiscountPolicyFactory();
+
+            var service = new OrderService(factory);
 
             var items = new List<Product>
             {
                 new Product("A", 100),
-                new Product("B", 150)
+                new Product("B", 200)
             };
             var order = new Order(items);
 
-            var price = service.CalcPrice(order, "VIP");
+            var price_vip = service.CalcPrice(order, "VIP");
+            var price_emp = service.CalcPrice(order, "EMPLOYEE");
+            var price_season = service.CalcPrice(order, "SEASONAL");
 
-            Assert.Equal(225, price);
+            Assert.Equal(270, price_vip);
+            Assert.Equal(240, price_emp);
+            Assert.Equal(255, price_season);
         }
     }
 }

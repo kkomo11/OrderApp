@@ -4,6 +4,13 @@ namespace OrderApp
 {
     public class OrderService
     {
+        private readonly IDiscountPolicyFactory _factory;
+
+        public OrderService(IDiscountPolicyFactory discountPolicyFactory)
+        {
+            _factory = discountPolicyFactory;
+        }
+
         public Order PlaceOrder(Cart cart)
         {
             if (cart == null || cart.GetItems().Count == 0)
@@ -26,17 +33,8 @@ namespace OrderApp
 
         public decimal CalcPrice(Order order, string ConsumerType)
         {
-            IDiscountPolicy discountPolicy;
-            if (ConsumerType == "VIP")
-            {
-                discountPolicy = new VipDiscountPolicy();
-            }
-            else
-            {
-                discountPolicy = new NoDiscountPolicy();
-            }
-
-            return discountPolicy.ApplyPrice(order.TotalPrice);
+            var policy = _factory.GetPolicy(ConsumerType);
+            return policy.ApplyDiscount(order.TotalPrice);
         }
     }
 }

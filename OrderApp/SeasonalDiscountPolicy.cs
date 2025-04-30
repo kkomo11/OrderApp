@@ -1,10 +1,10 @@
 ﻿namespace OrderApp
 {
-    public class NoDiscountPolicy : IDiscountPolicy
+    public class SeasonalDiscountPolicy : IDiscountPolicy
     {
         public decimal ApplyDiscount(decimal TotalPrice)
         {
-            return TotalPrice;
+            return TotalPrice * 0.85m;
         }
     }
 }

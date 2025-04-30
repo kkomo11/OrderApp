@@ -1,7 +1,7 @@
 ﻿namespace OrderApp
 {
-    interface IDiscountPolicy
+    public interface IDiscountPolicy
     {
-        decimal ApplyPrice(decimal TotalPrice);
+        decimal ApplyDiscount(decimal TotalPrice);
     }
 }
