@@ -11,8 +11,9 @@ namespace OrderApp
             cart.AddProduct(new Product("Keyboard", 100));
 
             IDiscountPolicyFactory factory = new DefaultDiscountPolicyFactory();
+            IOrderLogger orderLogger = new OrderLogger();
 
-            var service = new OrderService(factory);
+            var service = new OrderService(factory, orderLogger);
             var order = service.PlaceOrder(cart);
 
             Console.WriteLine($"Order Status: {order.Status}");

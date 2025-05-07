@@ -5,25 +5,36 @@ namespace OrderApp
     public class OrderService
     {
         private readonly IDiscountPolicyFactory _factory;
+        private readonly IOrderLogger _orderLogger;
 
-        public OrderService(IDiscountPolicyFactory discountPolicyFactory)
+        public OrderService(IDiscountPolicyFactory discountPolicyFactory, IOrderLogger orderLogger)
         {
             _factory = discountPolicyFactory;
+            _orderLogger = orderLogger;
         }
 
         public Order PlaceOrder(Cart cart)
+        {
+            ValidateOrder(cart);
+            Order order = CreateOrder(cart);
+            order.CompleteOrder();
+            _orderLogger.ShowOrderLog(order);
+            SendEmail(order);
+
+            return order;
+        }
+
+        private Order CreateOrder(Cart cart)
+        {
+            return new Order(cart.GetItems());
+        }
+
+        private void ValidateOrder(Cart cart)
         {
             if (cart == null || cart.GetItems().Count == 0)
             {
                 throw new ArgumentException("Cart is empty.");
             }
-
-            Order order = new Order(cart.GetItems());
-            order.CompleteOrder();
-
-            SendEmail(order);
-
-            return order;
         }
 
         private void SendEmail(Order order)

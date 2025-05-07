@@ -13,11 +13,12 @@ namespace OrderApp.Tests
         public void PlaceOrder_Should_ReturnCompletedOrder()
         {
             IDiscountPolicyFactory factory = new DefaultDiscountPolicyFactory();
+            IOrderLogger orderLogger = new OrderLogger();
 
             // Arrange
             var cart = new Cart();
             cart.AddProduct(new Product("Keyboard", 100));
-            var service = new OrderService(factory);
+            var service = new OrderService(factory, orderLogger);
 
             // Act
             var order = service.PlaceOrder(cart);
@@ -31,10 +32,11 @@ namespace OrderApp.Tests
         public void PlaceOrder_WithEmptyCart_ShouldThrowException()
         {
             IDiscountPolicyFactory factory = new DefaultDiscountPolicyFactory();
+            IOrderLogger orderLogger = new OrderLogger();
 
             // Arrange
             var emptyCart = new Cart();
-            var service = new OrderService(factory);
+            var service = new OrderService(factory, orderLogger);
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => service.PlaceOrder(emptyCart));
@@ -97,8 +99,9 @@ namespace OrderApp.Tests
         public void CalcPrice_Should_ApplyCorrectDiscount_ForEachPolicy()
         {
             IDiscountPolicyFactory factory = new DefaultDiscountPolicyFactory();
+            IOrderLogger orderLogger = new OrderLogger();
 
-            var service = new OrderService(factory);
+            var service = new OrderService(factory, orderLogger);
 
             var items = new List<Product>
             {
@@ -114,6 +117,42 @@ namespace OrderApp.Tests
             Assert.Equal(270, price_vip);
             Assert.Equal(240, price_emp);
             Assert.Equal(255, price_season);
+        }
+
+        [Fact]
+        public void GetPolicy_WithUnknownType_ShouldReturnDefaultPolicy()
+        {
+            IDiscountPolicyFactory factory = new DefaultDiscountPolicyFactory();
+            var policy =  factory.GetPolicy("UNKNOWN");
+            Assert.Equal((new NoDiscountPolicy()).GetType(), policy.GetType());
+        }
+
+        [Fact]
+        public void PlaceOrder_WithNullCart_ShouldThrowException()
+        {
+            IDiscountPolicyFactory factory = new DefaultDiscountPolicyFactory();
+            IOrderLogger orderLogger = new OrderLogger();
+            var service = new OrderService(factory, orderLogger);
+
+            Assert.Throws<ArgumentException>(() => service.PlaceOrder(null));
+        }
+
+        [Fact]
+        public void CompleteOrder_ShouldLog()
+        {
+            // Arrange
+            var logger = new SpyOrderLogger();
+            var factory = new DefaultDiscountPolicyFactory();
+            var service = new OrderService(factory, logger);
+
+            var cart = new Cart();
+            cart.AddProduct(new Product("A", 100));
+
+            // Act
+            service.PlaceOrder(cart);
+
+            // Assert
+            Assert.True(logger.WasCalled);
         }
     }
 }

@@ -44,8 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultDiscountPolicyFactory.cs" />
+    <Compile Include="IOrderLogger.cs" />
     <Compile Include="IDiscountPolicyFactory.cs" />
     <Compile Include="EmployeeDiscountPolicy.cs" />
+    <Compile Include="SpyOrderLogger.cs" />
+    <Compile Include="OrderLogger.cs" />
     <Compile Include="SeasonalDiscountPolicy.cs" />
     <Compile Include="VipDiscountPolicy.cs" />
     <Compile Include="NoDiscountPolicy.cs" />
