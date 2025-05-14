@@ -6,13 +6,13 @@ namespace OrderApp
 {
     public class Order
     {
-        public List<Product> Items { get; }
+        public List<CartItem> cartItems { get; }
         public string Status { get; private set; }
-        public decimal TotalPrice => Items.Sum(p => p.Price);
+        public decimal TotalPrice => cartItems.Sum(p => p.Product.Price * p.Quantity);
 
-        public Order(List<Product> items)
+        public Order(Cart cart)
         {
-            Items = items;
+            this.cartItems = cart.GetItems().ToList();
             Status = "Pending";
         }
 

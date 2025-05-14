@@ -1,24 +1,36 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace OrderApp
 {
     public class Cart
     {
-        private List<Product> items = new List<Product>();
+        private List<CartItem> items = new List<CartItem>();
 
-        public void AddProduct(Product product)
+        public void AddProduct(Product product, int quantity)
         {
-            items.Add(product);
+            var existing = items.FirstOrDefault(i => i.Product.Name == product.Name);
+            if (existing != null)
+            {
+                existing.AddQuantity(quantity);
+            }
+            else
+            {
+                items.Add(new CartItem(product, quantity));
+            }
         }
 
-        public List<Product> GetItems()
+        public decimal GetTotalPrice()
         {
-            return items;
+            return items.Sum(item => item.GetTotalPrice());
         }
 
         public void Clear()
         {
             items.Clear();
         }
+
+        // 필요한 경우 ReadOnly 형태로 제공
+        public IReadOnlyCollection<CartItem> GetItems() => items.AsReadOnly();
     }
 }

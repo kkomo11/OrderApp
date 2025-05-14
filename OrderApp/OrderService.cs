@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace OrderApp
 {
@@ -24,11 +25,6 @@ namespace OrderApp
             return order;
         }
 
-        private Order CreateOrder(Cart cart)
-        {
-            return new Order(cart.GetItems());
-        }
-
         private void ValidateOrder(Cart cart)
         {
             if (cart == null || cart.GetItems().Count == 0)
@@ -37,9 +33,15 @@ namespace OrderApp
             }
         }
 
+        private Order CreateOrder(Cart cart)
+        {
+            return new Order(cart);
+        }
+
+
         private void SendEmail(Order order)
         {
-            Console.WriteLine($"Email sent: Order with {order.Items.Count} items is now '{order.Status}'");
+            Console.WriteLine($"Email sent: Order with {order.cartItems.Count} items is now '{order.Status}'");
         }
 
         public decimal CalcPrice(Order order, string ConsumerType)

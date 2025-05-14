@@ -7,8 +7,8 @@ namespace OrderApp
         static void Main(string[] args)
         {
             var cart = new Cart();
-            cart.AddProduct(new Product("Mouse", 50));
-            cart.AddProduct(new Product("Keyboard", 100));
+            cart.AddProduct(new Product("Mouse", 50), 1);
+            cart.AddProduct(new Product("Keyboard", 100), 1);
 
             IDiscountPolicyFactory factory = new DefaultDiscountPolicyFactory();
             IOrderLogger orderLogger = new OrderLogger();

@@ -17,7 +17,7 @@ namespace OrderApp.Tests
 
             // Arrange
             var cart = new Cart();
-            cart.AddProduct(new Product("Keyboard", 100));
+            cart.AddProduct(new Product("Keyboard", 100), 1);
             var service = new OrderService(factory, orderLogger);
 
             // Act
@@ -25,7 +25,7 @@ namespace OrderApp.Tests
 
             // Assert
             Assert.Equal("Completed", order.Status);
-            Assert.Single(order.Items);
+            Assert.Single(order.cartItems);
         }
 
         [Fact]
@@ -45,12 +45,11 @@ namespace OrderApp.Tests
         [Fact]
         public void TotalPrice_Should_ReturnCorrectSum()
         {
-            var items = new List<Product>
-            {
-                new Product("A", 100),
-                new Product("B", 150)
-            };
-            var order = new Order(items);
+            var cart = new Cart();
+            cart.AddProduct(new Product("Keyboard", 100), 1);
+            cart.AddProduct(new Product("Mouse", 150), 1);
+
+            var order = new Order(cart);
 
             Assert.Equal(250, order.TotalPrice);
         }
@@ -58,7 +57,11 @@ namespace OrderApp.Tests
         [Fact]
         public void Cancel_Should_SetStatusToCancelled()
         {
-            var order = new Order(new List<Product> { new Product("A", 100) });
+            var cart = new Cart();
+            cart.AddProduct(new Product("Keyboard", 100), 1);
+            cart.AddProduct(new Product("Mouse", 150), 1);
+
+            var order = new Order(cart);
 
             order.Cancel();
 
@@ -68,7 +71,11 @@ namespace OrderApp.Tests
         [Fact]
         public void CancelledOrder_CannotBeCompleted()
         {
-            var order = new Order(new List<Product> { new Product("A", 100) });
+            var cart = new Cart();
+            cart.AddProduct(new Product("Keyboard", 100), 1);
+            cart.AddProduct(new Product("Mouse", 150), 1);
+
+            var order = new Order(cart);
             order.Cancel();
 
             Assert.Throws<InvalidOperationException>(() => order.CompleteOrder());
@@ -77,7 +84,11 @@ namespace OrderApp.Tests
         [Fact]
         public void CompletedOrder_CannotBeCancelled()
         {
-            var order = new Order(new List<Product> { new Product("A", 100) });
+            var cart = new Cart();
+            cart.AddProduct(new Product("Keyboard", 100), 1);
+            cart.AddProduct(new Product("Mouse", 150), 1);
+
+            var order = new Order(cart);
             order.CompleteOrder();
 
             Assert.Throws<InvalidOperationException>(() => order.Cancel());
@@ -87,8 +98,8 @@ namespace OrderApp.Tests
         public void Clear_Should_EmptyCart()
         {
             var cart = new Cart();
-            cart.AddProduct(new Product("A", 100));
-            cart.AddProduct(new Product("B", 100));
+            cart.AddProduct(new Product("A", 100), 1);
+            cart.AddProduct(new Product("B", 100), 1);
 
             cart.Clear();
 
@@ -103,12 +114,11 @@ namespace OrderApp.Tests
 
             var service = new OrderService(factory, orderLogger);
 
-            var items = new List<Product>
-            {
-                new Product("A", 100),
-                new Product("B", 200)
-            };
-            var order = new Order(items);
+            var cart = new Cart();
+            cart.AddProduct(new Product("Keyboard", 100), 1);
+            cart.AddProduct(new Product("Mouse", 200), 1);
+
+            var order = new Order(cart);
 
             var price_vip = service.CalcPrice(order, "VIP");
             var price_emp = service.CalcPrice(order, "EMPLOYEE");
@@ -146,7 +156,7 @@ namespace OrderApp.Tests
             var service = new OrderService(factory, logger);
 
             var cart = new Cart();
-            cart.AddProduct(new Product("A", 100));
+            cart.AddProduct(new Product("A", 100), 1);
 
             // Act
             service.PlaceOrder(cart);

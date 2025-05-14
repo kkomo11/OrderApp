@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CartItem.cs" />
     <Compile Include="DefaultDiscountPolicyFactory.cs" />
     <Compile Include="IOrderLogger.cs" />
     <Compile Include="IDiscountPolicyFactory.cs" />
